@@ -25,7 +25,6 @@ class Minsu_model extends Model {
         }
         return false; 
     }
-    
 
     private function is_username_or_email_exists($username, $email) {
         $userByUsername = $this->db->table('user')->where('username', $username)->get();
@@ -42,44 +41,29 @@ class Minsu_model extends Model {
     }
 
     public function get_all_news() {
-        // Ensure you are connected to the database
-        $this->call->database(); // Manually connect to the database if it's not auto-connected
-        
-        // Query to fetch all news posts
-        $news = $this->db->table('news')->get_all();  // get_all() returns all records from the table
+        $this->call->database(); 
+        $news = $this->db->table('news')->get_all(); 
         
         if ($news) {
-            return $news;  // Return the result as an array of news posts
+            return $news; 
         } else {
-            return false;  // Handle if no results are found
+            return false; 
         }
     }
-    
-    
-    
 
-    // Method to get a single news post by ID
     public function get_all_news_sorted() {
-        // Fetch news sorted by creation date in descending order
-        $this->call->database(); // Ensure the database is connected
-        
-        // Query to fetch all news posts sorted by created_at in descending order
+        $this->call->database(); 
         $news = $this->db->table('news')->order_by('created_at', 'DESC')->get_all(); 
     
         if ($news) {
-            return $news;  // Return the result as an array of news posts
+            return $news; 
         } else {
-            return false;  // Return false if no posts are found
+            return false; 
         }
     }
-    
 
     public function insert_news($newsData) {
-        // Using the query builder to insert data into the 'news' table
         return $this->db->table('news')->insert($newsData);
     }
-    
-
-    
 }
 ?>

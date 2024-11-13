@@ -42,20 +42,19 @@
             <button class="btn btn-primary">Post News</button>
         </a><br>
         <div class="news-container"> <!-- Changed class name to .news-container -->
-    <?php if (isset($news_posts) && !empty($news_posts)): ?>
-        <?php foreach ($news_posts as $news): ?>
-            <div class="news-post">
-                <h3><?php echo htmlspecialchars($news['title']); ?></h3>
-                <p><?php echo htmlspecialchars($news['content']); ?></p>
-                <!-- Correct the image path -->
-                <img src="/public/<?php echo htmlspecialchars($news['image']); ?>" alt="News Image">
-                <p><em><?php echo htmlspecialchars($news['caption']); ?></em></p>
-                <a href="/admin/view_news/<?php echo $news['id']; ?>">Read more</a>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>No news available.</p>
-    <?php endif; ?>
+        <?php if (isset($news_posts) && !empty($news_posts)): ?>
+    <?php foreach ($news_posts as $news): ?>
+        <div class="news-post">
+            <h3><?php echo htmlspecialchars($news['title']); ?></h3>
+            <p><?php echo htmlspecialchars($news['content']); ?></p>
+            <img src="/public/<?php echo htmlspecialchars($news['image']); ?>" alt="News Image">
+            <p><em><?php echo htmlspecialchars($news['caption']); ?></em></p>
+        </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p>No news available.</p>
+<?php endif; ?>
+
 </div>
 
 

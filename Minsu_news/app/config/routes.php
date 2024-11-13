@@ -43,12 +43,13 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 |
 */
 
-$router->get('/', 'Welcome::index');
-$router->get('/login', 'Minsu::login');
+$router->get('/', 'Minsu::login');
 $router->post('/login', 'Minsu::login');
+$router->get('/logout', 'Minsu::logout');
 $router->get('/signup', 'Minsu::signup');
 $router->post('/signup', 'Minsu::signup');
 $router->get('/home', 'Minsu::home');
+$router->get('/userNews', 'Minsu::userNews');
 $router->get('/logout', 'Minsu::logout');
 $router->get('/admin/dashboard', 'Minsu::admin_dashboard');
 $router->get('/contact', 'Minsu::contact');

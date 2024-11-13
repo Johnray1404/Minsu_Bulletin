@@ -50,10 +50,7 @@ class Minsu extends Controller {
     
         $this->call->view('minsu/login', $data);
     }
-    
-    
-    
-    
+
     public function signup() {
         $data = [];
 
@@ -81,29 +78,19 @@ class Minsu extends Controller {
     }
 
     public function home() {
-        // Fetch the latest news posts sorted by created_at, newest first
-        $data['news_posts'] = $this->minsu_model->get_all_news_sorted();
-        
-        // Pass the time_ago function to the view
-        $data['time_ago'] = array($this, 'time_ago');  // Pass the function reference
-
-        // Load the homepage view
-        $this->call->view('minsu/homepage', $data);
+        $this->call->view('Minsu/homepage');
     }
-    
 
     public function logout() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
     
-        
         session_destroy(); 
-        header('Location: /login');
+        header('Location: /');
         exit();
     }
-    
-    
+
     public function admin_dashboard() {
         $this->call->view('admin/dashboard');
     }
@@ -113,20 +100,14 @@ class Minsu extends Controller {
     }
 
     public function news() {
-        // Fetch the data from the model
-        $data['news_posts'] = $this->minsu_model->get_all_news();  // Fetch all news posts
+        $data['news_posts'] = $this->minsu_model->get_all_news();
         
-        // Check if the data is an array and not empty
         if (is_array($data['news_posts']) && !empty($data['news_posts'])) {
-            // Pass the data to the view
-            $this->call->view('admin/news', $data); // Corrected view call
+            $this->call->view('admin/news', $data);
         } else {
-            // Handle the case where no news posts are found
             echo "Error: No valid news data found.";
         }
     }
-    
-    
 
     public function view_news($id) {
         $data['news_post'] = $this->minsu_model->get_news_by_id($id);
@@ -134,57 +115,46 @@ class Minsu extends Controller {
     }
 
     public function postNews() {
-        $this->call->view('admin/postNews'); // Render the Post News form
+        $this->call->view('admin/postNews');
     }
 
-    // Method to handle form submission from 'Post News'
     public function submitNews() {
         if ($this->form_validation->submitted()) {
-            // Get form data
             $title = $this->io->post('title');
             $content = $this->io->post('content');
             $caption = $this->io->post('caption');
         
-            // Handle image upload
             if ($_FILES['image']['error'] == 0) {
-                // Define the directory inside the public folder
-                $uploadDir = 'public/uploads/news_images/'; // Path where the image will be stored
+                $uploadDir = 'public/uploads/news_images/';
         
-                // Ensure the directory exists, if not, create it
                 if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);  // Create the directory with proper permissions
+                    mkdir($uploadDir, 0755, true);
                 }
         
-                // Get the file's name
                 $fileName = basename($_FILES['image']['name']);
-                $uploadFile = $uploadDir . $fileName;  // Complete path for the uploaded file
+                $uploadFile = $uploadDir . $fileName;
         
-                // Security check: Only allow specific image file types (e.g., JPG, PNG)
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
                 if (!in_array($_FILES['image']['type'], $allowedTypes)) {
                     $_SESSION['error'] = 'Invalid image file type. Please upload JPG, PNG, or GIF images.';
                     return $this->call->view('admin/postNews');
                 }
         
-                // Optionally check for file size if needed (e.g., 5MB max)
-                $maxSize = 5 * 1024 * 1024;  // 5MB
+                $maxSize = 5 * 1024 * 1024;
                 if ($_FILES['image']['size'] > $maxSize) {
                     $_SESSION['error'] = 'File is too large. Max allowed size is 5MB.';
                     return $this->call->view('admin/postNews');
                 }
         
-                // Move the uploaded file to the target directory
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-                    // Prepare news data for insertion
                     $newsData = [
                         'title' => $title,
                         'content' => $content,
-                        'image' => 'uploads/news_images/' . $fileName,  // Store only the relative path for the image
+                        'image' => 'uploads/news_images/' . $fileName,
                         'caption' => $caption,
                         'created_at' => date('Y-m-d H:i:s')
                     ];
         
-                    // Insert news data into the database
                     if ($this->minsu_model->insert_news($newsData)) {
                         $_SESSION['success'] = 'News post created successfully!';
                         header("Location: /admin/news");
@@ -200,31 +170,30 @@ class Minsu extends Controller {
             }
         }
         
-        // If validation fails or there was an error, show the form again
         return $this->call->view('admin/postNews');
     }
-    
+
     public function time_ago($timestamp) {
         $time_ago = strtotime($timestamp);
         $current_time = time();
         $time_difference = $current_time - $time_ago;
 
         $seconds = $time_difference;
-        $minutes      = round($seconds / 60);           // value 60 is seconds
-        $hours        = round($seconds / 3600);         // value 3600 is 60 minutes * 60 sec
-        $days         = round($seconds / 86400);        // value 86400 is 24 hours * 60 minutes * 60 sec
-        $weeks        = round($seconds / 604800);       // value 604800 is 7 days * 24 hours * 60 minutes * 60 sec
-        $months       = round($seconds / 2629440);      // value 2629440 is (365*24*60*60)/12
-        $years        = round($seconds / 31553280);     // value 31553280 is (365*24*60*60)
+        $minutes      = round($seconds / 60);
+        $hours        = round($seconds / 3600);
+        $days         = round($seconds / 86400);
+        $weeks        = round($seconds / 604800);
+        $months       = round($seconds / 2629440);
+        $years        = round($seconds / 31553280);
 
         if ($seconds <= 60) {
             return "Now";
         } else if ($minutes <= 60) {
-            return ($minutes == 1) ? "one minute ago" : "$minutes minutes ago";
+            return ($minutes == 1) ? "1 minute " : "$minutes minutes ";
         } else if ($hours <= 24) {
-            return ($hours == 1) ? "an hour ago" : "$hours hours ago";
+            return ($hours == 1) ? "1 hour " : "$hours hours";
         } else if ($days <= 7) {
-            return ($days == 1) ? "yesterday" : "$days days ago";
+            return ($days == 1) ? "yesterday" : "$days days";
         } else if ($weeks <= 4.3) {
             return ($weeks == 1) ? "a week ago" : "$weeks weeks ago";
         } else if ($months <= 12) {
@@ -233,8 +202,12 @@ class Minsu extends Controller {
             return ($years == 1) ? "one year ago" : "$years years ago";
         }
     }
-    
-    
+
+    public function userNews() {
+        $data['news_posts'] = $this->minsu_model->get_all_news_sorted();
+        $data['time_ago'] = array($this, 'time_ago');
+        $this->call->view('minsu/userNews', $data);
+    }
 
 }
 ?>
