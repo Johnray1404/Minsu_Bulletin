@@ -59,10 +59,20 @@ class Minsu_model extends Model {
     
 
     // Method to get a single news post by ID
-    public function get_news_by_id($id) {
-        // Retrieve a single news post by its ID
-        return $this->db->table('news')->where('id', $id)->get();
+    public function get_all_news_sorted() {
+        // Fetch news sorted by creation date in descending order
+        $this->call->database(); // Ensure the database is connected
+        
+        // Query to fetch all news posts sorted by created_at in descending order
+        $news = $this->db->table('news')->order_by('created_at', 'DESC')->get_all(); 
+    
+        if ($news) {
+            return $news;  // Return the result as an array of news posts
+        } else {
+            return false;  // Return false if no posts are found
+        }
     }
+    
 
     public function insert_news($newsData) {
         // Using the query builder to insert data into the 'news' table

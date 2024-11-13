@@ -35,42 +35,43 @@
 </div>
 
 <div class="main">
-    <div class="breaking-news">Breaking News: Major updates from MINSU News Bulletin!</div>
+    <div class="breaking-news">Breaking News: Major updates from MINSU News Bulletin!</div><br>
 
-    <div class="carousel">
-        <img src="path/to/featured1.jpg" alt="Featured News 1">
-        <div class="carousel-caption">
-            <h5>Featured News Title 1</h5>
-            <p>Brief description of the featured news article.</p>
-        </div>
-    </div>
+    <!-- Container for News Posts -->
+    <div class="news-feed-container">
+        <?php if (!empty($news_posts)): ?>
+            <?php foreach ($news_posts as $post): ?>
+                <div class="post">
+                    <!-- Post Header: Profile Image and Admin Name -->
+                    <div class="post-header">
+                        <div class="post-user-info">
+                            <img src="public/images/minsu.jpg" alt="Admin Profile" class="post-user-image">
+                            <div class="post-user-name">
+                                <strong>MINSU</strong> <!-- Admin Name -->
+                            </div>
+                        </div>
+                        <span class="post-time"><?= $time_ago($post['created_at']) ?> <!-- Time ago --> </span>
+                    </div>
 
-    <h2 style="color: var(--primary-color); font-weight: bold; text-align: center;">Latest News</h2>
-    <div class="card-columns">
-        <div class="card">
-            <img src="path/to/news1.jpg" alt="News 1">
-            <div class="card-body">
-                <h5 class="card-title">News Title 1</h5>
-                <p class="card-text">A brief description of the news article goes here...</p>
-                <a href="#" class="btn-read-more">Read More</a>
-            </div>
-        </div>
-        <div class="card">
-            <img src="path/to/news2.jpg" alt="News 2">
-            <div class="card-body">
-                <h5 class="card-title">News Title 2</h5>
-                <p class="card-text">Another short description for a different news article...</p>
-                <a href="#" class="btn-read-more">Read More</a>
-            </div>
-        </div>
-        <div class="card">
-            <img src="path/to/news3.jpg" alt="News 3">
-            <div class="card-body">
-                <h5 class="card-title">News Title 3</h5>
-                <p class="card-text">Quick summary for this news article...</p>
-                <a href="#" class="btn-read-more">Read More</a>
-            </div>
-        </div>
+                    <!-- Post Title -->
+                    <div class="post-title">
+                        <h1><?= htmlspecialchars($post['title']) ?></h1> <!-- Post Title -->
+                    </div>
+
+                    <!-- Post Caption -->
+                    <div class="post-caption">
+                        <p><strong><?= htmlspecialchars($post['caption']) ?></strong></p>
+                    </div>
+
+                    <!-- Post Image -->
+                    <div class="post-image-container">
+                        <img src="public/<?= $post['image'] ?>" alt="Post Image" class="main-post-image">
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No news posts available at the moment.</p>
+        <?php endif; ?>
     </div>
 
     <footer>

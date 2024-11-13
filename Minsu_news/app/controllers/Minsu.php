@@ -81,8 +81,16 @@ class Minsu extends Controller {
     }
 
     public function home() {
-        $this->call->view('Minsu/homepage');
+        // Fetch the latest news posts sorted by created_at, newest first
+        $data['news_posts'] = $this->minsu_model->get_all_news_sorted();
+        
+        // Pass the time_ago function to the view
+        $data['time_ago'] = array($this, 'time_ago');  // Pass the function reference
+
+        // Load the homepage view
+        $this->call->view('minsu/homepage', $data);
     }
+    
 
     public function logout() {
         if (session_status() == PHP_SESSION_NONE) {
@@ -194,6 +202,36 @@ class Minsu extends Controller {
         
         // If validation fails or there was an error, show the form again
         return $this->call->view('admin/postNews');
+    }
+    
+    public function time_ago($timestamp) {
+        $time_ago = strtotime($timestamp);
+        $current_time = time();
+        $time_difference = $current_time - $time_ago;
+
+        $seconds = $time_difference;
+        $minutes      = round($seconds / 60);           // value 60 is seconds
+        $hours        = round($seconds / 3600);         // value 3600 is 60 minutes * 60 sec
+        $days         = round($seconds / 86400);        // value 86400 is 24 hours * 60 minutes * 60 sec
+        $weeks        = round($seconds / 604800);       // value 604800 is 7 days * 24 hours * 60 minutes * 60 sec
+        $months       = round($seconds / 2629440);      // value 2629440 is (365*24*60*60)/12
+        $years        = round($seconds / 31553280);     // value 31553280 is (365*24*60*60)
+
+        if ($seconds <= 60) {
+            return "Now";
+        } else if ($minutes <= 60) {
+            return ($minutes == 1) ? "one minute ago" : "$minutes minutes ago";
+        } else if ($hours <= 24) {
+            return ($hours == 1) ? "an hour ago" : "$hours hours ago";
+        } else if ($days <= 7) {
+            return ($days == 1) ? "yesterday" : "$days days ago";
+        } else if ($weeks <= 4.3) {
+            return ($weeks == 1) ? "a week ago" : "$weeks weeks ago";
+        } else if ($months <= 12) {
+            return ($months == 1) ? "a month ago" : "$months months ago";
+        } else {
+            return ($years == 1) ? "one year ago" : "$years years ago";
+        }
     }
     
     
