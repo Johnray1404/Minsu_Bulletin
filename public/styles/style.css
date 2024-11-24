@@ -1,0 +1,558 @@
+/* Global Variables */
+:root {
+    --primary-color: #048506;
+    --secondary-color: #f1f3f5;
+    --accent-color: #ff9800;
+    --hover-color: #66bb6a;
+    --bg-color: #fafafa;
+    --text-color: #333;
+    --light-text: #fff;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    --btn-hover-color: #388e3c;
+    --font-family: 'Poppins', sans-serif;
+}
+
+/* General Styling */
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-family);
+    margin: 0;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
+}
+
+/* Header Styles */
+.header {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.header img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 3px solid var(--light-text);
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--light-text);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.nav-link:hover {
+    color: var(--hover-color);
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--light-text);
+    border-radius: 25px;
+    padding: 5px 15px;
+    width: 250px;
+}
+
+.search-bar i {
+    color: var(--primary-color);
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 16px;
+    padding: 8px;
+    width: 100%;
+    border-radius: 25px;
+}
+
+.search-bar input::placeholder {
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* User Profile Dropdown */
+.user-profile {
+    position: relative;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.user-profile i {
+    font-size: 30px;
+    color: var(--light-text);
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background-color: var(--light-text);
+    box-shadow: 0 4px 8px var(--card-shadow);
+    border-radius: 8px;
+    min-width: 200px;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    color: var(--text-color);
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--hover-color);
+    color: var(--light-text);
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+/* Main Content Styles */
+.main {
+    margin-top: 60px;
+    padding: 20px 30px;
+}
+
+.breaking-news {
+    background-color: #dc3545;
+    color: var(--light-text);
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* News Feed Container */
+.news-feed-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Post Styles */
+.post {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 600px; /* Slimmed container */
+    margin: 0 auto; /* Centered */
+}
+
+/* Admin profile inside the post */
+.post-header {
+    display: flex;
+    justify-content: flex-start; /* Align to the left */
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px; /* Add spacing between image and text */
+    position: relative;
+}
+
+.post-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.post-user-image {
+    width: 50px; /* Adjusted image size */
+    height: 50px; /* Adjusted image size */
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-user-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.post-time {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Post Title */
+.post-title h1 {
+    font-size: 22px; /* Reduced size for title */
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+}
+
+.post-caption p {
+    font-size: 16px; /* Reduced size for caption */
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Post Image */
+.post-image-container {
+    margin-top: 15px;
+}
+
+.main-post-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    padding: 20px 0;
+    text-align: center;
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .post-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .post-title h1 {
+        font-size: 20px; /* Adjust title size for smaller screens */
+    }
+
+    .post-caption p {
+        font-size: 14px;
+    }
+
+    .main-post-image {
+        height: 300px;
+        object-fit: cover;
+    }
+}
+
+/* Carousel */
+.carousel {
+    position: relative;
+    overflow: hidden;
+    margin-top: 30px;
+}
+
+.carousel img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: var(--light-text);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Cards Grid */
+.card-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.card {
+    background-color: var(--light-text);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px var(--card-shadow);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.card-text {
+    color: #555;
+}
+
+.btn-read-more {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    border-radius: 12px;
+    font-weight: bold;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.btn-read-more:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+/* Contact Page Styles */
+.contact-header {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.contact-header h1 {
+    font-size: 36px;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.contact-header p {
+    font-size: 18px;
+    color: var(--text-color);
+    margin-top: 10px;
+}
+
+.contact-details {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.contact-card {
+    background-color: var(--light-text);
+    padding: 20px;
+    border-radius: 10px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 4px 8px var(--card-shadow);
+    transition: transform 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-10px);
+}
+
+.contact-card i {
+    font-size: 40px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.contact-card h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.contact-card p {
+    font-size: 16px;
+    color: #555;
+}
+
+.contact-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    padding-right: 30px;
+}
+
+.contact-form {
+    background-color: var(--light-text);
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 4px 8px var(--card-shadow);
+}
+
+.contact-form h2 {
+    font-size: 28px;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.contact-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 90%;
+    margin-left: 20px;
+    padding: 10px;
+    padding-right: 1px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.contact-form textarea {
+    height: 150px;
+    resize: none;
+}
+
+.contact-form button {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.contact-form button:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+
+
+/**User Profile**/
+
+/* Profile Page Styles */
+.profile-container {
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info h2 {
+    margin: 0;
+    padding: 10px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.profile-pic img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    margin-top: 10px;
+}
+
+.profile-update {
+    margin-top: 30px;
+}
+
+.profile-update h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.profile-update .error, .profile-update .success {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.profile-update .error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.profile-update .success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.profile-update form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-update input[type="file"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.profile-update button {
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.profile-update button:hover {
+    background-color: #0056b3;
+}
