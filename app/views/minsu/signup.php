@@ -112,6 +112,13 @@
     <div class="container">
         <img src="/public/images/minsu.jpg" alt="MINSU Logo">
         <h2>Sign Up</h2>
+        <!-- views/minsu/verify_email.php -->
+<?php if (isset($success)): ?>
+    <p><?= $success ?></p>
+<?php elseif (isset($error)): ?>
+    <p><?= $error ?></p>
+<?php endif; ?>
+
 
         <?php if (isset($data['error'])): ?>
             <div class="message error" id="message-error"><?php echo $data['error']; ?></div>

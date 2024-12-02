@@ -280,13 +280,14 @@
         </div>
     </div>
 </div>
+
 <div class="profile-container">
     <div class="profile-header">
         <img src="public/<?php echo !empty($data['user']['profile_pic']) ? $data['user']['profile_pic'] : 'default-profile.jpg'; ?>" alt="Profile Picture">
         <div class="user-info">
-            <h2><?php echo htmlspecialchars($data['user']['username']); ?></h2>
-            <p><?php echo htmlspecialchars($data['user']['email']); ?></p>
-            <p><strong>Location:</strong> <?php echo isset($data['user']['location']) ? htmlspecialchars($data['user']['location']) : 'Not Set'; ?></p>
+            <h2><?php echo htmlspecialchars($data['user']['username'] ?? 'Unknown User'); ?></h2>
+            <p><?php echo htmlspecialchars($data['user']['email'] ?? 'No email provided'); ?></p>
+            <p><strong>Location:</strong> <?php echo htmlspecialchars($data['user']['location'] ?? 'Not Set'); ?></p>
             <a href="javascript:void(0);" class="upload-btn" onclick="document.getElementById('profilePicInput').click();">
                 <i class="fas fa-camera"></i>
                 <?php if (!empty($data['user']['profile_pic'])): ?>
@@ -299,17 +300,18 @@
         </div>
     </div>
 </div>
+
 <div class="post-list">
     <h3>Your Posts</h3>
     <?php if (!empty($data['posts'])): ?>
         <?php foreach ($data['posts'] as $post): ?>
             <div class="post-container" id="post-<?php echo $post['id']; ?>">
                 <div class="post-header">
-                    <img src="public/<?php echo htmlspecialchars($post['profile_pic']); ?>" alt="Profile Picture">
+                    <img src="public/<?php echo htmlspecialchars($post['profile_pic'] ?? 'default-profile.jpg'); ?>" alt="Profile Picture">
                     <div class="post-info">
-                        <span class="username"><?php echo htmlspecialchars($post['username']); ?></span>
+                        <span class="username"><?php echo htmlspecialchars($post['username'] ?? 'Unknown User'); ?></span>
                         <div class="post-meta">
-                            <span><i class="fas fa-clock"></i> <?php echo $post['time_ago']; ?></span>
+                            <span><i class="fas fa-clock"></i> <?php echo $post['time_ago'] ?? 'Just now'; ?></span>
                         </div>
                     </div>
                     <div class="three-dot-menu" onclick="toggleDeleteOption(this)">
@@ -320,13 +322,13 @@
                     </div>
                 </div>
                 <div class="post-title">
-                    <h1><?php echo htmlspecialchars($post['post_title']); ?></h1>
+                    <h1><?php echo htmlspecialchars($post['post_title'] ?? 'No Title'); ?></h1>
                 </div>
                 <div class="post-content">
-                    <p><?php echo nl2br(htmlspecialchars($post['post_caption'])); ?></p>
+                    <p><?php echo nl2br(htmlspecialchars($post['post_caption'] ?? 'No caption available')); ?></p>
                     <?php if (!empty($post['post_mediafile'])): ?>
                         <div class="post-media">
-                            <img src="public/<?php echo htmlspecialchars($post['post_mediafile']); ?>" alt="Post Media">
+                            <img src="public/<?php echo htmlspecialchars($post['post_mediafile'] ?? ''); ?>" alt="Post Media">
                         </div>
                     <?php endif; ?>
                 </div>
@@ -336,29 +338,33 @@
         <p>No posts available.</p>
     <?php endif; ?>
 </div>
+
+
 <script>
     function uploadProfilePic() {
-    const fileInput = document.getElementById('profilePicInput');
-    const formData = new FormData();
-    formData.append('profile_pic', fileInput.files[0]);
+        const fileInput = document.getElementById('profilePicInput');
+        const formData = new FormData();
+        formData.append('profile_pic', fileInput.files[0]);
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/userProfile', true);  // Make sure the correct endpoint is used
-    xhr.onload = function() {
-        const response = JSON.parse(xhr.responseText);
-        if (xhr.status === 200 && response.success) {
-            alert(response.message);  // Success
-            location.reload();
-        } else {
-            alert(response.message);  // Error message
-        }
-    };
-    xhr.send(formData);
-}
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/userProfile', true);  // Make sure the correct endpoint is used
+        xhr.onload = function() {
+            const response = JSON.parse(xhr.responseText);
+            if (xhr.status === 200 && response.success) {
+                alert(response.message);  // Success
+                location.reload();
+            } else {
+                alert(response.message);  // Error message
+            }
+        };
+        xhr.send(formData);
+    }
+
     function toggleDeleteOption(element) {
         const deleteOption = element.parentNode.querySelector('.delete-option');
         deleteOption.classList.toggle('show');
     }
+
     function deletePost(postId) {
         if (confirm("Are you sure you want to delete this post?")) {
             const xhr = new XMLHttpRequest();
@@ -377,10 +383,12 @@
             xhr.send("postId=" + postId);
         }
     }
+
     function toggleDropdown() {
         var dropdown = document.getElementById('dropdownMenu');
         dropdown.classList.toggle('show');
     }
+
     function confirmLogout() {
         if (confirm("Are you sure you want to logout?")) {
             window.location.href = "/";

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-        :root {
+:root {
             --primary-color: #048506;
             --secondary-color: #f1f3f5;
             --accent-color: #ff9800;
@@ -246,6 +246,12 @@
             border-radius: 10px;
         }
 
+        .main-post-video {
+            width: 100%; /* Set the video width to 100% to match the image size */
+            height: auto; /* Maintain the aspect ratio of the video */
+            border-radius: 10px;
+        }
+
         footer {
             background-color: var(--primary-color);
             color: var(--light-text);
@@ -273,6 +279,11 @@
                 height: 300px;
                 object-fit: cover;
             }
+
+            .main-post-video {
+                height: 300px; /* Adjust height for mobile view */
+                object-fit: cover;
+            }
         }
 
         .profile-img {
@@ -287,7 +298,6 @@
             font-size: 40px;
             cursor: pointer;
         }
-
     </style>
 
 </head>
@@ -348,8 +358,22 @@
                     <div class="post-caption">
                         <p><strong><?= htmlspecialchars($post['caption']) ?></strong></p>
                     </div>
-                    <div class="post-image-container">
-                        <img src="public/<?= $post['image'] ?>" alt="Post Image" class="main-post-image">
+
+                    <div class="post-media-container">
+                        <?php if (!empty($post['image'])): ?>
+                            <div class="post-image-container">
+                                <img src="public/<?= $post['image'] ?>" alt="Post Image" class="main-post-image">
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($post['video'])): ?>
+                            <div class="post-video-container">
+                                <video controls class="main-post-video">
+                                    <source src="public/<?= $post['video'] ?>" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -370,10 +394,9 @@
 
     function confirmLogout() {
         if (confirm("Are you sure you want to logout?")) {
-            window.location.href = "/";
+            window.location.href = "/logout";
         }
     }
 </script>
-
 </body>
 </html>

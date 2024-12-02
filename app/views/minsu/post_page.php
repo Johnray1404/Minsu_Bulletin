@@ -114,12 +114,12 @@
             position: relative;
             display: inline-block;
             margin-left: 20px;
+            cursor: pointer;
         }
 
         .user-profile i {
             font-size: 30px;
             color: var(--light-text);
-            cursor: pointer;
         }
 
         .dropdown-menu {
@@ -176,7 +176,7 @@
             padding: 20px;
             box-shadow: 0 4px 12px var(--card-shadow);
             border-radius: 8px;
-            max-width: 800px;
+            max-width: 600px;
             margin: 20px auto;
         }
 
@@ -189,6 +189,16 @@
             font-size: 14px;
             color: var(--text-color);
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-meta .clock {
+            font-size: 12px; /* Reduced size for clock icon */
+            color: var(--text-color);
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
         }
 
         .post-content {
@@ -257,45 +267,6 @@
                 object-fit: cover;
             }
         }
-        .post-container {
-            margin-top: 30px;
-            background-color: var(--light-text);
-            padding: 20px;
-            box-shadow: 0 4px 12px var(--card-shadow);
-            border-radius: 8px;
-            max-width: 600px;
-            margin: 20px auto;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .post-header img {
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .post-header .username {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .post-meta {
-            font-size: 14px;
-            color: var(--text-color);
-            margin-bottom: 15px;
-        }
-
-        .post-content {
-            font-size: 18px;
-            line-height: 1.8;
-            color: var(--text-color);
-        }
     </style>
 </head>
 <body>
@@ -315,15 +286,12 @@
     </div>
 
     <div class="user-profile">
-        <!-- Check if the user has uploaded a profile picture -->
         <?php if (!empty($user['profile_pic'])): ?>
-            <!-- If the user has a profile picture -->
             <img src="public/<?php echo $user['profile_pic']; ?>" alt="Profile Picture" class="profile-img" onclick="toggleDropdown()" />
         <?php else: ?>
-            <!-- If the user does not have a profile picture, show the default icon -->
             <i class="fas fa-user-circle profile-icon" onclick="toggleDropdown()"></i>
         <?php endif; ?>
-
+        
         <div class="dropdown-menu" id="dropdownMenu">
             <a href="/userProfile">User Profile</a>
             <a href="/change-password">Change Password</a>
@@ -341,15 +309,14 @@
             <?php foreach ($news_posts as $post): ?>
                 <div class="post-container">
                     <div class="post-header">
-                        <?php if (!empty($post['profile_pic'])): ?>
-                            <img src="public/<?php echo htmlspecialchars($post['profile_pic']); ?>" alt="Profile Picture">
-                        <?php else: ?>
-                            <img src="public/images/default-profile.png" alt="Profile Picture">
-                        <?php endif; ?>
-                        <div class="post-info">
-                            <span class="username"><?php echo htmlspecialchars($post['username']); ?></span>
+                        <i class="fas fa-user-circle" style="font-size: 40px; color: var(--primary-color);"></i> 
+                        <!-- Increased icon size and adjusted color -->
+                        <div class="post-info" style="display: inline-block; margin-left: 15px;">
+                            <span class="username" style="font-size: 18px; font-weight: 600;">User</span> 
+                            <!-- Display 'User' instead of username -->
                             <div class="post-meta">
-                                <span><i class="fas fa-clock"></i> <?php echo $time_ago($post['created_at']); ?></span>
+                                <span class="clock"><i class="fas fa-clock"></i></span> 
+                                <span><?php echo $time_ago($post['created_at']); ?></span>
                             </div>
                         </div>
                     </div>
@@ -385,7 +352,6 @@
         var dropdown = document.getElementById('dropdownMenu');
         dropdown.classList.toggle('show');
     }
-    
 
     // Confirm logout action
     function confirmLogout() {

@@ -8,12 +8,23 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e5e5e5;
+            margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            background-image: url('/public/images/background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay for better contrast */
+            z-index: -1; /* Behind the content */
         }
         .container {
             background-color: #048506; 
@@ -111,6 +122,7 @@
     </style>
 </head>
 <body>
+    <div class="overlay"></div> <!-- Dark overlay for background contrast -->
     <div class="container">
         <img src="/public/images/minsu.jpg" alt="MINSU Logo">
         <h2>Login</h2>

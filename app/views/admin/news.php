@@ -42,20 +42,28 @@
             <button class="btn btn-primary">Post News</button>
         </a><br>
         <div class="news-container">
-        <?php if (isset($news_posts) && !empty($news_posts)): ?>
-    <?php foreach ($news_posts as $news): ?>
-        <div class="news-post">
-            <h3><?php echo htmlspecialchars($news['title']); ?></h3>
-            <p><?php echo htmlspecialchars($news['caption']); ?></p>
-            <img src="/public/<?php echo htmlspecialchars($news['image']); ?>" alt="News Image">
-            <p><em><?php echo htmlspecialchars($news['category']); ?></em></p>
-        </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <p>No news available.</p>
-<?php endif; ?>
-
+    <?php if (isset($news_posts) && !empty($news_posts)): ?>
+        <?php foreach ($news_posts as $news): ?>
+            <div class="news-post">
+                <h3><?php echo htmlspecialchars($news['title'] ?? 'No Title'); ?></h3>
+                <p><?php echo htmlspecialchars($news['caption'] ?? 'No caption available'); ?></p>
+                <?php if (!empty($news['image'])): ?>
+                    <img src="/public/<?php echo htmlspecialchars($news['image']); ?>" alt="News Image">
+                <?php endif; ?>
+                <?php if (!empty($news['video'])): ?>
+                    <video width="320" height="240" controls>
+                        <source src="/public/<?php echo htmlspecialchars($news['video']); ?>" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                <?php endif; ?>
+                <p><em><?php echo htmlspecialchars($news['category'] ?? 'Uncategorized'); ?></em></p>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No news available.</p>
+    <?php endif; ?>
 </div>
+
 
 
 <script>

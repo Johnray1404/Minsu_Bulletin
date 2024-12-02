@@ -39,34 +39,38 @@
     <h2>Submit News Article</h2>
 
     <form action="/admin/post_news" method="POST" enctype="multipart/form-data" class="news-form">
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" placeholder="Enter the title of the news" required>
-        </div>
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" placeholder="Enter the title of the news" required>
+    </div>
 
-        <div class="form-group">
-            <label for="caption">Caption</label>
-            <textarea id="caption" name="caption" placeholder="Enter the caption of the news" rows="5" required></textarea>
-        </div>
+    <div class="form-group">
+        <label for="caption">Caption</label>
+        <textarea id="caption" name="caption" placeholder="Enter the caption of the news" rows="5" required></textarea>
+    </div>
 
-        <div class="form-group">
-            <label for="image">Image</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
-        </div>
+    <div class="form-group">
+        <label for="image">Image</label>
+        <input type="file" id="image" name="image" accept="image/*">
+    </div>
 
-        <div class="form-group">
-    <label for="category">Category</label>
-    <select id="category" name="category" required>
-        <option value="" disabled selected>Select category</option>
-        <option value="academic">Academic</option>
-        <option value="sports">Sports</option>
-        <option value="events">Events</option>
-    </select>
-</div>
+    <div class="form-group">
+        <label for="video">Video</label>
+        <input type="file" id="video" name="video" accept="video/*">
+    </div>
 
+    <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+            <option value="" disabled selected>Select category</option>
+            <option value="academic">Academic</option>
+            <option value="sports">Sports</option>
+            <option value="events">Events</option>
+        </select>
+    </div>
 
-        <button type="submit" class="btn btn-primary">Post News</button>
-    </form>
+    <button type="submit" class="btn btn-primary">Post News</button>
+</form>
 </div>
 
 <script>
@@ -83,6 +87,5 @@
         }
     }
 </script>
-
 </body>
 </html>
