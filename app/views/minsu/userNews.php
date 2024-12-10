@@ -5,304 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage - MINSU News Bulletin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-:root {
-            --primary-color: #048506;
-            --secondary-color: #f1f3f5;
-            --accent-color: #ff9800;
-            --hover-color: #66bb6a;
-            --bg-color: #fafafa;
-            --text-color: #333;
-            --light-text: #fff;
-            --card-shadow: rgba(0, 0, 0, 0.1);
-            --btn-hover-color: #388e3c;
-            --font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            font-family: var(--font-family);
-            margin: 0;
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            line-height: 1.6;
-        }
-
-        .header {
-            background-color: var(--primary-color);
-            color: var(--light-text);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 999;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            box-sizing: border-box;
-        }
-
-        .header img {
-            height: 50px;
-            width: 50px;
-            border-radius: 50%;
-            border: 3px solid var(--light-text);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: var(--light-text);
-            font-weight: 600;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-link i {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-
-        .nav-link:hover {
-            color: var(--hover-color);
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background-color: var(--light-text);
-            border-radius: 25px;
-            padding: 5px 15px;
-            width: 250px;
-        }
-
-        .search-bar i {
-            color: var(--primary-color);
-            font-size: 18px;
-            margin-right: 10px;
-        }
-
-        .search-bar input {
-            border: none;
-            outline: none;
-            background: transparent;
-            color: var(--text-color);
-            font-size: 16px;
-            padding: 8px;
-            width: 100%;
-            border-radius: 25px;
-        }
-
-        .search-bar input::placeholder {
-            color: var(--text-color);
-            font-size: 14px;
-        }
-
-        .user-profile {
-            position: relative;
-            display: inline-block;
-            margin-left: 20px;
-        }
-
-        .user-profile i {
-            font-size: 30px;
-            color: var(--light-text);
-            cursor: pointer;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 40px;
-            background-color: var(--light-text);
-            box-shadow: 0 4px 8px var(--card-shadow);
-            border-radius: 8px;
-            min-width: 200px;
-            padding: 10px 0;
-            z-index: 1000;
-        }
-
-        .dropdown-menu a {
-            color: var(--text-color);
-            padding: 10px 20px;
-            text-decoration: none;
-            display: block;
-            font-size: 16px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: var(--hover-color);
-            color: var(--light-text);
-        }
-
-        .dropdown-menu.show {
-            display: block;
-        }
-
-        .main {
-            margin-top: 60px;
-            padding: 20px 30px;
-        }
-
-        .breaking-news {
-            background-color: #dc3545;
-            color: var(--light-text);
-            padding: 10px;
-            font-weight: bold;
-            text-align: center;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .news-feed-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .post {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            width: 600px;
-            margin: 0 auto;
-        }
-
-        .post-header {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 10px;
-            position: relative;
-        }
-
-        .post-user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .post-user-image {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .post-user-name {
-            font-weight: bold;
-            font-size: 18px;
-            color: #333;
-        }
-
-        .post-time {
-            font-size: 14px;
-            color: #777;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .post-time i {
-            color: var(--primary-color);
-        }
-
-        .post-title h1 {
-            font-size: 22px;
-            font-weight: bold;
-            color: #333;
-            margin: 10px 0;
-        }
-
-        .post-caption p {
-            font-size: 16px;
-            color: #555;
-            margin-bottom: 15px;
-        }
-
-        .post-image-container {
-            margin-top: 15px;
-        }
-
-        .main-post-image {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
-
-        .main-post-video {
-            width: 100%; /* Set the video width to 100% to match the image size */
-            height: auto; /* Maintain the aspect ratio of the video */
-            border-radius: 10px;
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: var(--light-text);
-            padding: 20px 0;
-            text-align: center;
-            font-size: 14px;
-            margin-top: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .post-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .post-title h1 {
-                font-size: 20px;
-            }
-
-            .post-caption p {
-                font-size: 14px;
-            }
-
-            .main-post-image {
-                height: 300px;
-                object-fit: cover;
-            }
-
-            .main-post-video {
-                height: 300px; /* Adjust height for mobile view */
-                object-fit: cover;
-            }
-        }
-
-        .profile-img {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-        }
-
-        .profile-icon {
-            font-size: 40px;
-            cursor: pointer;
-        }
-    </style>
-
+    <link rel="stylesheet" href="/public/styles/userNews.css">
 </head>
 <body>
-
 <div class="header">
     <img src="public/images/minsu.jpg" alt="MINSU Logo">
     <div class="nav-links">
@@ -326,68 +31,158 @@
 
         <div class="dropdown-menu" id="dropdownMenu">
             <a href="/userProfile">User Profile</a>
-            <a href="/change-password">Change Password</a>
             <a href="#" onclick="confirmLogout()">Logout</a>
         </div>
     </div>
 </div>
 
+    <!-- userNews.php -->
 <div class="main">
     <div class="breaking-news">Breaking News: Major updates from MINSU News Bulletin!</div><br>
 
     <div class="news-feed-container">
-        <?php if (!empty($news_posts)): ?>
-            <?php foreach ($news_posts as $post): ?>
-                <div class="post">
-                    <div class="post-header">
-                        <div class="post-user-info">
-                            <img src="public/images/minsu.jpg" alt="Admin Profile" class="post-user-image">
-                            <div class="post-user-name">
-                                <strong>MINSU</strong>
-                            </div>
-                        </div>
-                        <div class="post-time">
-                            <i class="fas fa-clock"></i>
-                            <span><?= $time_ago($post['created_at']) ?></span>
+    <?php if (!empty($news_posts)): ?>
+        <?php foreach ($news_posts as $post): ?>
+            <div class="post">
+                <!-- Post Header -->
+                <div class="post-header">
+                    <div class="post-user-info">
+                        <img src="public/images/minsu.jpg" alt="Admin Profile" class="post-user-image">
+                        <div class="post-user-name">
+                            <strong>MINSU</strong>
                         </div>
                     </div>
-
-                    <div class="post-title">
-                        <h1><?= htmlspecialchars($post['title']) ?></h1>
-                    </div>
-                    <div class="post-caption">
-                        <p><strong><?= htmlspecialchars($post['caption']) ?></strong></p>
-                    </div>
-
-                    <div class="post-media-container">
-                        <?php if (!empty($post['image'])): ?>
-                            <div class="post-image-container">
-                                <img src="public/<?= $post['image'] ?>" alt="Post Image" class="main-post-image">
-                            </div>
-                        <?php endif; ?>
-
-                        <?php if (!empty($post['video'])): ?>
-                            <div class="post-video-container">
-                                <video controls class="main-post-video">
-                                    <source src="public/<?= $post['video'] ?>" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                        <?php endif; ?>
+                    <div class="post-time">
+                        <i class="fas fa-clock"></i>
+                        <span><?= $time_ago($post['created_at']) ?></span>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No news posts available at the moment.</p>
-        <?php endif; ?>
-    </div>
+
+                <!-- Post Title and Caption -->
+                <div class="post-title">
+                    <h1><?= htmlspecialchars($post['title']) ?></h1>
+                </div>
+                <div class="post-caption">
+                    <p><strong><?= htmlspecialchars($post['caption']) ?></strong></p>
+                </div>
+
+                <!-- Post Media -->
+                <div class="post-media-container">
+                    <?php if (!empty($post['image'])): ?>
+                        <div class="post-image-container">
+                            <img src="public/<?= $post['image'] ?>" alt="Post Image" class="main-post-image">
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($post['video'])): ?>
+                        <div class="post-video-container">
+                            <video controls class="main-post-video">
+                                <source src="public/<?= $post['video'] ?>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Like Button Section -->
+                <div class="like-section">
+                    <div class="like-button <?= $post['user_liked'] ? 'liked' : '' ?>" onclick="toggleLike(<?= $post['id'] ?>, this)">
+                        <i class="fas fa-thumbs-up"></i>
+                        Like
+                    </div>
+                    <span class="like-count"><?= $post['like_count'] ?> likes</span> <!-- This will be updated dynamically with JS -->
+                </div>
+
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h3>Comments (<?= count($post['comments']) ?>)</h3>
+                        <button class="toggle-comments-btn" onclick="toggleComments(<?= $post['id'] ?>)">Show Comments</button>
+                    </div>
+                    
+                    <div class="comments-list" id="comments-list-<?= $post['id'] ?>" style="display: none;">
+                        <?php if (!empty($post['comments'])): ?>
+                            <ul>
+                                <?php foreach ($post['comments'] as $comment): ?>
+                                    <li class="comment-item">
+                                        <div class="comment-user">
+                                            <!-- Display the user's profile picture -->
+                                            <img src="public/<?= !empty($comment['profile_pic']) ? $comment['profile_pic'] : 'images/default-profile.png' ?>" 
+                                                alt="<?= htmlspecialchars($comment['username']) ?>'s Profile Picture" 
+                                                class="comment-user-image">
+                                            <strong><?= htmlspecialchars($comment['username']) ?></strong>
+                                        </div>
+                                        <div class="comment-content">
+                                            <p><?= htmlspecialchars($comment['comment']) ?></p>
+                                            <span class="comment-time"><?= $time_ago($comment['created_at']) ?></span>
+                                        </div>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p>No comments yet.</p>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Add Comment Form -->
+                    <div class="comment-form">
+                        <form action="/minsu/add_comment" method="POST">
+                            <textarea name="comment" placeholder="Add a comment..." required></textarea>
+                            <input type="hidden" name="news_id" value="<?= $post['id'] ?>">
+                            <button type="submit">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No news posts available at the moment.</p>
+    <?php endif; ?>
 </div>
 
+
+</div>
 <footer>
     <p>&copy; 2024 MINSU News Bulletin. All Rights Reserved.</p>
 </footer>
-
 <script>
+    function toggleLike(newsId, button) {
+     console.log("Toggling like for post ID:", newsId); // Check if this is triggered
+     const userId = <?= $_SESSION['user_id']; ?>;  // Assuming user ID is available in the session
+     console.log("User ID:", userId);  // Log user ID for debugging
+
+     // Make AJAX request to server
+     fetch('/minsu/toggle_like', {
+         method: 'POST',
+         headers: {
+             'Content-Type': 'application/x-www-form-urlencoded',
+         },
+         body: `news_id=${newsId}&user_id=${userId}`  // Send news_id and user_id in request body
+     })
+     .then(response => {
+         console.log("Response status:", response.status);  // Debugging: Check response status
+         return response.json();
+     })
+     .then(data => {
+         console.log("Response from server:", data);  // Debugging: Check the returned data
+
+         if (data.status === 'success') {
+             // Toggle the like button state
+             button.classList.toggle('liked');
+             console.log("Like toggled for post ID:", newsId);  // Debugging: Confirm like toggle
+
+             // Update the like count
+             const likeCountElem = button.nextElementSibling;
+             likeCountElem.textContent = `${data.like_count} likes`;  // Update like count
+         } else {
+             console.log("Error: Could not toggle like.");
+         }
+     })
+     .catch(error => {
+         console.log("Error with fetch request:", error);  // Debugging: Log any error with the fetch request
+     });
+ }
+
     function toggleDropdown() {
         document.getElementById("dropdownMenu").classList.toggle("show");
     }
@@ -397,6 +192,21 @@
             window.location.href = "/logout";
         }
     }
+
+    function toggleComments(postId) {
+    const commentsList = document.getElementById(`comments-list-${postId}`);
+    const toggleButton = commentsList.previousElementSibling.querySelector('.toggle-comments-btn');
+
+    // Toggle the visibility of comments
+    if (commentsList.style.display === 'none') {
+        commentsList.style.display = 'block';
+        toggleButton.textContent = 'Hide Comments';
+    } else {
+        commentsList.style.display = 'none';
+        toggleButton.textContent = 'Show Comments';
+    }
+}
+
 </script>
 </body>
 </html>

@@ -56,20 +56,77 @@ class Minsu_model extends Model {
         }
     }
 
+    // Get the like count for a specific news post
+    public function get_likes_count($news_id) {
+        $this->call->database();
+        $likes = $this->db->table('news_likes')->where('news_id', $news_id)->get_all();
+        return count($likes);  // Return the total likes count
+    }
+
+    // Check if the user has liked a particular news post
+    public function has_user_liked($news_id, $user_id) {
+        $this->call->database();
+        $like = $this->db->table('news_likes')
+            ->where('news_id', $news_id)
+            ->where('user_id', $user_id)
+            ->get();
+        return $like ? true : false;  // Return true if the user has liked the post
+    }
+
+    // Add a like to the news post
+    public function add_like($news_id, $user_id) {
+        $this->call->database();
+        return $this->db->table('news_likes')->insert([
+            'news_id' => $news_id,
+            'user_id' => $user_id,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
+    // Remove a like from the news post
+    public function remove_like($news_id, $user_id) {
+        $this->call->database();
+        return $this->db->table('news_likes')
+            ->where('news_id', $news_id)
+            ->where('user_id', $user_id)
+            ->delete();
+    }
+
+    // Get all news posts sorted by creation date
     public function get_all_news_sorted() {
-        $this->call->database(); 
-        $news = $this->db->table('news')->order_by('created_at', 'DESC')->get_all(); 
-    
-        if ($news) {
-            return $news; 
-        } else {
-            return false; 
-        }
+        $this->call->database();
+        $news = $this->db->table('news')->order_by('created_at', 'DESC')->get_all();
+        return $news ? $news : false;
     }
 
     public function insert_news($newsData) {
         return $this->db->table('news')->insert($newsData);
     }
+    public function add_comment($news_id, $user_id, $comment) {
+        $data = [
+            'news_id' => $news_id,
+            'user_id' => $user_id,
+            'comment' => $comment,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+    
+        // Use the Lavalust Query Builder to insert the data into the 'news_comment' table
+        return $this->db->table('news_comment')->insert($data);
+    }
+    
+
+    // Get all comments for a specific news post
+    public function get_comments_by_news($news_id) {
+        // Fetch comments along with the username and profile picture of the user
+        return $this->db->table('news_comment c')
+                        ->select('c.comment, u.username, u.profile_pic, c.created_at')
+                        ->join('user u', 'c.user_id = u.id')
+                        ->where('c.news_id', $news_id)
+                        ->order_by('c.created_at', 'DESC')
+                        ->get_all();
+    }
+    
+    
 
     public function get_user_by_id($userId) {
         return $this->db->table('user')->where('id', $userId)->get(); 
@@ -131,5 +188,48 @@ class Minsu_model extends Model {
     public function insert_post($postData) {
         return $this->db->table('posts')->insert($postData);  
     }
+
+    // Get the like count for a specific post
+public function get_post_likes_count($post_id) {
+    $likes = $this->db->table('post_likes')->where('post_id', $post_id)->get_all();
+    return count($likes);  // Return the total likes count
+}
+
+// Check if the user has liked a particular post
+public function has_user_liked_post($post_id, $user_id) {
+    $like = $this->db->table('post_likes')
+        ->where('post_id', $post_id)
+        ->where('user_id', $user_id)
+        ->get();
+    return $like ? true : false;  // Return true if the user has liked the post
+}
+
+// Add a like to a post
+public function add_post_like($post_id, $user_id) {
+    $this->call->database();
+    return $this->db->table('post_likes')->insert([
+        'post_id' => $post_id,
+        'user_id' => $user_id,
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
+}
+
+// Remove a like from a post
+public function remove_post_like($post_id, $user_id) {
+    $this->call->database();
+    return $this->db->table('post_likes')
+        ->where('post_id', $post_id)
+        ->where('user_id', $user_id)
+        ->delete();
+}
+
+public function get_all_users() {
+    // Use the proper method to fetch all users
+    $data = $this->db->table('user')->get_all();  // Get all users from the 'user' table
+    
+    // Return the fetched data
+    return $data;
+}
+
 }
 ?>

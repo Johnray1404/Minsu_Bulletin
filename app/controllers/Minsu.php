@@ -107,13 +107,30 @@ class Minsu extends Controller {
 
     //admin news page
     public function news() {
-        $data['news_posts'] = $this->minsu_model->get_all_news();
+        // Fetch all news posts from the model
+        $data['news_posts'] = $this->minsu_model->get_all_news_sorted();
+    
+        // If news posts are available, process them to include like counts and comments
         if (is_array($data['news_posts']) && !empty($data['news_posts'])) {
+            foreach ($data['news_posts'] as &$post) {
+                // Add the like count for each news post
+                $post['like_count'] = $this->minsu_model->get_likes_count($post['id']);
+                
+                // Fetch comments for each post (admin will only see them)
+                $post['comments'] = $this->minsu_model->get_comments_by_news($post['id']);
+            }
+    
+            // Merge additional data (like time_ago function) if needed
+            $data['time_ago'] = array($this, 'time_ago');
+    
+            // Call the view to display the news posts along with the comments
             $this->call->view('admin/news', $data);
         } else {
             echo "Error: No valid news data found.";
         }
     }
+    
+    
 
     public function view_news($id) {
         $data['news_post'] = $this->minsu_model->get_news_by_id($id);
@@ -252,53 +269,150 @@ class Minsu extends Controller {
         }
     }
 
-    //User News
+    // Display user news feed with like count
     public function userNews() {
+        // Fetch all news posts from the model
         $data['news_posts'] = $this->minsu_model->get_all_news_sorted();
+        
+        // For each news post, add the like count and check if the current user has liked the post
+        foreach ($data['news_posts'] as &$post) {
+            // Fetch the like count and whether the user has liked the post
+            $post['like_count'] = $this->minsu_model->get_likes_count($post['id']);
+            $post['user_liked'] = $this->minsu_model->has_user_liked($post['id'], $_SESSION['user_id']); 
+            
+            // Fetch the comments for each post and add them to the post data
+            $post['comments'] = $this->minsu_model->get_comments_by_news($post['id']);
+        }
+    
+        // Passing the time_ago function for formatting timestamps
         $data['time_ago'] = array($this, 'time_ago');
+    
+        // Merge the data with any other data you have
         $combinedData = array_merge($this->data, $data);
+    
+        // Load the view with the combined data
         $this->call->view('minsu/userNews', $combinedData);
     }
+    
+
+    public function toggle_like() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            error_log("POST data: " . print_r($_POST, true));
+            $news_id = $_POST['news_id'];
+            $user_id = $_POST['user_id']; 
+    
+            // Check if the user has already liked this post
+            $has_liked = $this->minsu_model->has_user_liked($news_id, $user_id);
+            if ($has_liked) {
+                $this->minsu_model->remove_like($news_id, $user_id);
+                $action = 'removed';
+            } else {
+                $this->minsu_model->add_like($news_id, $user_id);
+                $action = 'added';
+            }
+    
+            $like_count = $this->minsu_model->get_likes_count($news_id);
+    
+            // Return a success response
+            echo json_encode([
+                'status' => 'success',
+                'action' => $action,
+                'like_count' => $like_count
+            ]);
+        } else {
+            // Invalid request
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid request method'
+            ]);
+        }
+    }
+
+    // Minsu.php
+
+public function add_comment() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $news_id = $_POST['news_id'];
+        $user_id = $_SESSION['user_id'];  // Assuming user_id is stored in the session
+        $comment = $_POST['comment'];
+
+        // Add the comment to the database
+        $this->minsu_model->add_comment($news_id, $user_id, $comment);
+
+        // Redirect back to the news page
+        header('Location: /userNews');
+    }
+}
+
 
     //User Profile
     public function userProfile() {
+        // Start session if not already started
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
+    
+        // Get logged-in user ID
         $userId = $_SESSION['user_id'];
+    
+        // Fetch user details
         $user = $this->minsu_model->get_user_by_id($userId);
         $data = [];
+    
         if ($user) {
-            $data['user'] = $user;  
+            // Add user data to the view
+            $data['user'] = $user;
+    
+            // Fetch posts for the logged-in user
             $posts = $this->minsu_model->get_posts_by_user($userId);
+            
             if ($posts) {
+                // Add 'time_ago' field for each post
                 foreach ($posts as &$post) {
                     $post['time_ago'] = $this->time_ago($post['created_at']);
+                    
+                    // Add like count and check if the user has already liked the post
+                    $post['like_count'] = $this->minsu_model->get_post_likes_count($post['id']);
+                    $post['user_liked'] = $this->minsu_model->has_user_liked_post($post['id'], $userId);
                 }
             }
+    
+            // Add posts to data to be passed to the view
             $data['posts'] = $posts;
+    
+            // Handle profile picture upload
             if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
                 $uploadDir = 'public/uploads/profile_pic/';
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
+    
+                // Process image upload
                 $fileName = pathinfo($_FILES['profile_pic']['name'], PATHINFO_FILENAME);
                 $fileExt = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
                 $newFileName = uniqid('', true) . '.' . $fileExt;
                 $uploadFile = $uploadDir . $newFileName;
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    
+                // Validate file type
                 if (!in_array($_FILES['profile_pic']['type'], $allowedTypes)) {
                     $_SESSION['error'] = 'Invalid image file type. Please upload JPG, PNG, or GIF images.';
                     echo json_encode(['success' => false, 'message' => 'Invalid image type']);
                     exit();
                 }
+    
+                // Validate file size
                 $maxSize = 5 * 1024 * 1024;
                 if ($_FILES['profile_pic']['size'] > $maxSize) {
                     echo json_encode(['success' => false, 'message' => 'File is too large. Max allowed size is 5MB.']);
                     exit();
                 }
+    
+                // Move the uploaded file to the server
                 if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploadFile)) {
                     $imagePath = 'uploads/profile_pic/' . $newFileName;
+    
+                    // Update the profile picture in the database
                     if ($this->minsu_model->update_profile_pic($userId, $imagePath)) {
                         echo json_encode(['success' => true, 'message' => 'Profile picture updated successfully!']);
                     } else {
@@ -312,13 +426,23 @@ class Minsu extends Controller {
         } else {
             $data['error'] = 'User not found';  
         }
+    
+        // Return the user profile view with the user data and posts
         return $this->call->view('minsu/userProfile', $data);
     }
+    
 
     //User Post Page
     public function post_page() {
-        $this->call->model('Minsu_model'); 
+        $this->call->model('Minsu_model');
         $posts = $this->Minsu_model->get_all_posts();
+    
+        // Add the like count and check if the user liked each post
+        foreach ($posts as &$post) {
+            $post['like_count'] = $this->Minsu_model->get_post_likes_count($post['id']);
+            $post['user_liked'] = $this->Minsu_model->has_user_liked_post($post['id'], $_SESSION['user_id']);
+        }
+    
         if ($posts) {
             $this->data['news_posts'] = $posts;
         } else {
@@ -327,6 +451,43 @@ class Minsu extends Controller {
         $this->data['time_ago'] = array($this, 'time_ago');
         $this->call->view('minsu/post_page', $this->data);
     }
+    
+    // Method to handle the toggling of post like (like/unlike)
+    public function toggle_post_like() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $post_id = $_POST['post_id'];
+            $user_id = $_POST['user_id'];
+    
+            // Check if the user has already liked the post
+            $has_liked = $this->minsu_model->has_user_liked_post($post_id, $user_id);
+    
+            if ($has_liked) {
+                // Remove the like
+                $this->minsu_model->remove_post_like($post_id, $user_id);
+                $action = 'removed';
+            } else {
+                // Add the like
+                $this->minsu_model->add_post_like($post_id, $user_id);
+                $action = 'added';
+            }
+    
+            // Get updated like count
+            $like_count = $this->minsu_model->get_post_likes_count($post_id);
+    
+            // Respond with the updated status and like count
+            echo json_encode([
+                'status' => 'success',
+                'action' => $action,
+                'like_count' => $like_count
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid request method'
+            ]);
+        }
+    }
+    
 
     //View User Post 
     public function getPost() {
@@ -402,5 +563,32 @@ class Minsu extends Controller {
             exit();
         }
     }
+
+    // Gallery Page
+public function gallery() {
+    // This could fetch the gallery images or any data related to the gallery from the database.
+    // For now, I'll assume you have the gallery images stored in the 'public/images' folder.
+    
+    // Example of image data (replace with actual database queries or static data if necessary)
+    $this->data['gallery_images'] = [
+        ['title' => 'Image 1', 'image_path' => 'images/msu1.jpg'],
+        ['title' => 'Image 2', 'image_path' => 'images/msu2.jpg'],
+        ['title' => 'Image 3', 'image_path' => 'images/msu3.jpg'],
+        ['title' => 'Image 4', 'image_path' => 'images/msu4.jpg']
+    ];
+    
+    // Load the gallery view and pass the gallery data
+    $this->call->view('Minsu/gallery', $this->data);
+}
+
+public function accounts() {
+    // Fetch all user accounts from the model
+    $data['users'] = $this->minsu_model->get_all_users();
+    
+    // Call the view to display the user accounts
+    $this->call->view('admin/accounts', $data);
+}
+
+
 }
 ?>

@@ -147,9 +147,6 @@
         <div class="sign-up">
             Don't have an account? <a href="/signup">Sign up</a>
         </div>
-        <div class="forgot-password">
-            <a href="/forgot-password">Forgot Password?</a>
-        </div>
     </div>
 
     <script>

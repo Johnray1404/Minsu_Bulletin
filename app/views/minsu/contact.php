@@ -30,7 +30,6 @@
         <?php endif; ?>
         <div class="dropdown-menu" id="dropdownMenu">
             <a href="/userProfile">User Profile</a>
-            <a href="/change-password">Change Password</a>
             <a href="#" onclick="confirmLogout()">Logout</a>
         </div>
     </div>
@@ -57,19 +56,6 @@
             <i class="fas fa-map-marker-alt"></i>
             <h3>Address</h3>
             <p>Masipit Calapan City, Oriental Mindoro</p>
-        </div>
-    </div>
-
-    <!-- Contact Form Container -->
-    <div class="contact-form-container">
-        <div class="contact-form">
-            <h2>Send Us a Message</h2>
-            <form action="#" method="POST">
-                <input type="text" name="name" placeholder="Your Name" required>
-                <input type="email" name="email" placeholder="Your Email" required>
-                <textarea name="message" placeholder="Your Message" required></textarea>
-                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send Message</button>
-            </form>
         </div>
     </div>
 

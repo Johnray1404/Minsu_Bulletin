@@ -13,10 +13,9 @@
 
     <div class="sidebar">
         <img src="/public/images/minsu.jpg" alt="MINSU Logo">
-        <a href="/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+        <a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
         <a href="/admin/news"><i class="fas fa-newspaper"></i>News</a>
-        <a href="/postrequest"><i class="fas fa-edit"></i>PostRequest</a>
-        <a href="/manageaccount"><i class="fas fa-users-cog"></i>Manage Account</a>
+        <a href="/admin/accounts"><i class="fas fa-users-cog"></i>Manage Account</a>
     </div>
 
     <div class="main-content">

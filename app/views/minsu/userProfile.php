@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         :root {
             --primary-color: #048506;
@@ -150,78 +151,60 @@
             background-color: #45a049;
         }
         .post-list {
-            width: 600px;
-            margin: 30px auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px; /* Adds space on top */
+       }
+
+        .posts-wrapper {
+            width: 100%; /* Make the wrapper take the full width of the parent */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* Space between each post */
         }
+
         .post-container {
-            position: relative;
-            margin-left: -20px;
-            margin-bottom: 20px;
+            width: 600px; /* Make each post container take up 80% of the page width */
+            max-width: 800px; /* Max width to prevent it from getting too wide */
+            background-color: #fff;
             padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 600px;
+            margin: 10px 0; /* Adds vertical margin between posts */
         }
+
         .post-header {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
+
         .post-header img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            margin-right: 15px;
+            object-fit: cover;
         }
-        .post-header .username {
-            font-size: 18px;
-            font-weight: bold;
+
+        .post-title h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
         }
-        .post-header .post-meta {
-            margin-left: auto;
-            color: #888;
-            font-size: 14px;
-        }
+
         .post-content p {
             font-size: 16px;
-            line-height: 1.6;
             color: #555;
+            margin-bottom: 15px;
         }
+
         .post-media img {
             width: 100%;
-            height: auto;
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 15px;
-        }
-        .three-dot-menu {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-        }
-        .three-dot-menu:hover {
-            color: var(--hover-color);
-        }
-        .delete-option {
-            display: none;
-            position: absolute;
-            top: 30px;
-            right: 10px;
-            background-color: #f44336;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .delete-option.show {
-            display: block;
         }
         .dropdown-menu {
             display: none;
@@ -251,149 +234,163 @@
         .dropdown-menu.show {
             display: block;
         }
+        .like-button {
+        cursor: pointer;
+        font-size: 16px;
+        border: none;  
+        outline: none; 
+        background: none;  
+        }
+        .like-button.liked {
+            color: var(--accent-color);  
+            font-weight: bold; 
+        }
+        .like-button:focus {
+            outline: none;  
+        }
     </style>
-</head>
-<body>
-<div class="header">
-    <img src="public/images/minsu.jpg" alt="MINSU Logo">
-    <div class="nav-links">
-        <a class="nav-link" href="/home"><i class="fas fa-home"></i>Home</a>
-        <a class="nav-link" href="/userNews"><i class="fas fa-newspaper"></i>News</a>
-        <a class="nav-link" href="/post"><i class="fas fa-pen"></i> Post</a>
-        <a class="nav-link" href="/gallery"><i class="fas fa-image"></i>Gallery</a>
-        <a class="nav-link" href="/contact"><i class="fas fa-envelope"></i>Contact</a>
-    </div>
-    <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search here">
-    </div>
-    <div class="user-profile">
-        <?php if (!empty($user['profile_pic'])): ?>
-            <img src="public/<?php echo $user['profile_pic']; ?>" alt="Profile Picture" class="profile-img" onclick="toggleDropdown()" />
-        <?php else: ?>
-            <i class="fas fa-user-circle profile-icon" onclick="toggleDropdown()"></i>
-        <?php endif; ?>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <a href="/userProfile">User Profile</a>
-            <a href="/change-password">Change Password</a>
-            <a href="#" onclick="confirmLogout()">Logout</a>
-        </div>
-    </div>
-</div>
-
-<div class="profile-container">
-    <div class="profile-header">
-        <img src="public/<?php echo !empty($data['user']['profile_pic']) ? $data['user']['profile_pic'] : 'default-profile.jpg'; ?>" alt="Profile Picture">
-        <div class="user-info">
-            <h2><?php echo htmlspecialchars($data['user']['username'] ?? 'Unknown User'); ?></h2>
-            <p><?php echo htmlspecialchars($data['user']['email'] ?? 'No email provided'); ?></p>
-            <p><strong>Location:</strong> <?php echo htmlspecialchars($data['user']['location'] ?? 'Not Set'); ?></p>
-            <a href="javascript:void(0);" class="upload-btn" onclick="document.getElementById('profilePicInput').click();">
-                <i class="fas fa-camera"></i>
-                <?php if (!empty($data['user']['profile_pic'])): ?>
-                    Change Profile Picture
-                <?php else: ?>
-                    Upload Profile Picture
-                <?php endif; ?>
-            </a>
-            <input type="file" id="profilePicInput" style="display: none;" onchange="uploadProfilePic()" accept="image/*">
-        </div>
-    </div>
-</div>
-
-<div class="post-list">
-    <h3>Your Posts</h3>
-    <?php if (!empty($data['posts'])): ?>
-        <?php foreach ($data['posts'] as $post): ?>
-            <div class="post-container" id="post-<?php echo $post['id']; ?>">
-                <div class="post-header">
-                    <img src="public/<?php echo htmlspecialchars($post['profile_pic'] ?? 'default-profile.jpg'); ?>" alt="Profile Picture">
-                    <div class="post-info">
-                        <span class="username"><?php echo htmlspecialchars($post['username'] ?? 'Unknown User'); ?></span>
-                        <div class="post-meta">
-                            <span><i class="fas fa-clock"></i> <?php echo $post['time_ago'] ?? 'Just now'; ?></span>
-                        </div>
-                    </div>
-                    <div class="three-dot-menu" onclick="toggleDeleteOption(this)">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </div>
-                    <div class="delete-option">
-                        <a href="javascript:void(0);" onclick="deletePost(<?php echo $post['id']; ?>)">Delete</a>
-                    </div>
+        </head>
+            <body>
+            <div class="header">
+                <img src="public/images/minsu.jpg" alt="MINSU Logo">
+                <div class="nav-links">
+                    <a class="nav-link" href="/home"><i class="fas fa-home"></i>Home</a>
+                    <a class="nav-link" href="/userNews"><i class="fas fa-newspaper"></i>News</a>
+                    <a class="nav-link" href="/post"><i class="fas fa-pen"></i> Post</a>
+                    <a class="nav-link" href="/gallery"><i class="fas fa-image"></i>Gallery</a>
+                    <a class="nav-link" href="/contact"><i class="fas fa-envelope"></i>Contact</a>
                 </div>
-                <div class="post-title">
-                    <h1><?php echo htmlspecialchars($post['post_title'] ?? 'No Title'); ?></h1>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search here">
                 </div>
-                <div class="post-content">
-                    <p><?php echo nl2br(htmlspecialchars($post['post_caption'] ?? 'No caption available')); ?></p>
-                    <?php if (!empty($post['post_mediafile'])): ?>
-                        <div class="post-media">
-                            <img src="public/<?php echo htmlspecialchars($post['post_mediafile'] ?? ''); ?>" alt="Post Media">
-                        </div>
+                <div class="user-profile">
+                    <?php if (!empty($user['profile_pic'])): ?>
+                        <img src="public/<?php echo $user['profile_pic']; ?>" alt="Profile Picture" class="profile-img" onclick="toggleDropdown()" />
+                    <?php else: ?>
+                        <i class="fas fa-user-circle profile-icon" onclick="toggleDropdown()"></i>
                     <?php endif; ?>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/userProfile">User Profile</a>
+                        <a href="#" onclick="confirmLogout()">Logout</a>
+                    </div>
                 </div>
             </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>No posts available.</p>
-    <?php endif; ?>
-</div>
 
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img src="public/<?php echo !empty($data['user']['profile_pic']) ? $data['user']['profile_pic'] : 'default-profile.jpg'; ?>" alt="Profile Picture">
+                    <div class="user-info">
+                        <h2><?php echo htmlspecialchars($data['user']['username'] ?? 'Unknown User'); ?></h2>
+                        <p><?php echo htmlspecialchars($data['user']['email'] ?? 'No email provided'); ?></p>
+                        <p><strong>Location:</strong> <?php echo htmlspecialchars($data['user']['location'] ?? 'Not Set'); ?></p>
+                        <a href="javascript:void(0);" class="upload-btn" onclick="document.getElementById('profilePicInput').click();">
+                            <i class="fas fa-camera"></i>
+                            <?php if (!empty($data['user']['profile_pic'])): ?>
+                                Change Profile Picture
+                            <?php else: ?>
+                                Upload Profile Picture
+                            <?php endif; ?>
+                        </a>
+                        <input type="file" id="profilePicInput" style="display: none;" onchange="uploadProfilePic()" accept="image/*">
+                    </div>
+                </div>
+            </div>
 
-<script>
-    function uploadProfilePic() {
-        const fileInput = document.getElementById('profilePicInput');
-        const formData = new FormData();
-        formData.append('profile_pic', fileInput.files[0]);
+            <div class="post-list">
+                <h3>Your Posts</h3>
+                <?php if (!empty($data['posts'])): ?>
+                    <!-- All posts are directly in the post-list container -->
+                    <?php foreach ($data['posts'] as $post): ?>
+                        <div class="post-container" id="post-<?php echo $post['id']; ?>">
+                            <div class="post-header">
+                                <img src="public/<?php echo htmlspecialchars($post['profile_pic'] ?? 'default-profile.jpg'); ?>" alt="Profile Picture">
+                                <div class="post-info">
+                                    <span class="username"><?php echo htmlspecialchars($post['username'] ?? 'Unknown User'); ?></span>
+                                    <div class="post-meta">
+                                        <span><i class="fas fa-clock"></i> <?php echo $post['time_ago'] ?? 'Just now'; ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-title">
+                                <h1><?php echo htmlspecialchars($post['post_title'] ?? 'No Title'); ?></h1>
+                            </div>
+                            <div class="post-content">
+                                <p><?php echo nl2br(htmlspecialchars($post['post_caption'] ?? 'No caption available')); ?></p>
+                                <?php if (!empty($post['post_mediafile'])): ?>
+                                    <div class="post-media">
+                                        <img src="public/<?php echo htmlspecialchars($post['post_mediafile'] ?? ''); ?>" alt="Post Media">
+                                    </div>
+                                <?php endif; ?>
+                            </div>
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/userProfile', true);  // Make sure the correct endpoint is used
-        xhr.onload = function() {
-            const response = JSON.parse(xhr.responseText);
-            if (xhr.status === 200 && response.success) {
-                alert(response.message);  // Success
-                location.reload();
-            } else {
-                alert(response.message);  // Error message
-            }
-        };
-        xhr.send(formData);
-    }
+                            <div class="like-section">
+                                <button class="like-button <?= $post['user_liked'] ? 'liked' : '' ?>" onclick="togglePostLike(<?= $post['id'] ?>, this)">
+                                    <i class="fas fa-thumbs-up"></i> Like
+                                </button>
+                                <span id="like-count-<?= $post['id'] ?>"><?= $post['like_count'] ?> likes</span>
+                            </div>
 
-    function toggleDeleteOption(element) {
-        const deleteOption = element.parentNode.querySelector('.delete-option');
-        deleteOption.classList.toggle('show');
-    }
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No posts available.</p>
+                <?php endif; ?>
+            </div>
 
-    function deletePost(postId) {
-        if (confirm("Are you sure you want to delete this post?")) {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/deletePost", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        document.getElementById("post-" + postId).remove();
-                    } else {
-                        alert("An error occurred while deleting the post.");
+            <script>
+                function uploadProfilePic() {
+                    const fileInput = document.getElementById('profilePicInput');
+                    const formData = new FormData();
+                    formData.append('profile_pic', fileInput.files[0]);
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/userProfile', true);  // Make sure the correct endpoint is used
+                    xhr.onload = function() {
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status === 200 && response.success) {
+                            alert(response.message);  // Success
+                            location.reload();
+                        } else {
+                            alert(response.message);  // Error message
+                        }
+                    };
+                    xhr.send(formData);
+                }
+
+                function toggleDropdown() {
+                    var dropdown = document.getElementById('dropdownMenu');
+                    dropdown.classList.toggle('show');
+                }
+
+                function confirmLogout() {
+                    if (confirm("Are you sure you want to logout?")) {
+                        window.location.href = "/";
                     }
                 }
-            };
-            xhr.send("postId=" + postId);
-        }
-    }
-
-    function toggleDropdown() {
-        var dropdown = document.getElementById('dropdownMenu');
-        dropdown.classList.toggle('show');
-    }
-
-    function confirmLogout() {
-        if (confirm("Are you sure you want to logout?")) {
-            window.location.href = "/";
-        }
-    }
-</script>
+                function togglePostLike(postId, element) {
+                    $.ajax({
+                url: '/minsu/toggle_post_like',  // Ensure the URL is correct (adjust the path if necessary)
+                type: 'POST',
+                data: {
+                    post_id: postId,
+                    user_id: <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0; ?>
+                },
+                success: function(response) {
+                    let data = JSON.parse(response);
+                    if (data.status === 'success') {
+                        // Update like count and change button state
+                        $('#like-count-' + postId).text(data.like_count + ' likes');
+                        $(element).toggleClass('liked', data.action === 'added');
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                },
+                error: function() {
+                    alert('Error while toggling like');
+                }
+            });
+            }
+     </script>
 </body>
 </html>

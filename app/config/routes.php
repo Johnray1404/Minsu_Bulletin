@@ -55,6 +55,7 @@ $router->get('/admin/dashboard', 'Minsu::admin_dashboard');
 $router->get('/contact', 'Minsu::contact');
 $router->get('/admin/news', 'Minsu::news'); 
 $router->get('/admin/view_news/{id}', 'Minsu::view_news');
+$router->get('/admin/delete_news/{id}', 'Minsu::delete_news');
 $router->get('/admin/post_news', 'Minsu::postNews');         
 $router->post('/admin/post_news', 'Minsu::submitNews');
 $router->get('/userProfile', 'Minsu::userProfile');
@@ -63,6 +64,17 @@ $router->get('/post', 'Minsu::post_page');
 $router->get('/get-post', 'Minsu::getPost');    
 $router->post('/add-post', 'Minsu::addPost');  
 $router->get('/delete-post/{id}', 'Minsu::deletePost');
+$router->get('/gallery', 'Minsu::gallery');
+$router->post('/minsu/toggle_like', 'Minsu::toggle_like');
+$router->post('/minsu/toggle_post_like', 'Minsu::toggle_post_like');
+$router->get('/admin/accounts', 'Minsu::accounts');
+$router->post('/minsu/add_comment', 'Minsu::add_comment');
+
+
+
+
+
+
 
 
 
