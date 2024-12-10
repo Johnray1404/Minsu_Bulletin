@@ -1,0 +1,294 @@
+/* Container that holds the posts */
+.news-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    margin-top: 20px;
+    max-width: 600px;  /* Set a max width to prevent stretching */
+    width: 100%;       /* Ensure the container takes up full width but doesn't exceed max-width */
+    margin-left: auto;  /* Center the container */
+    margin-right: auto; /* Center the container */
+    overflow-y: auto;
+}
+
+/* Individual post styles */
+.news-post {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+}
+
+/* Post title styling */
+.news-post h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Post caption styling */
+.news-post p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Image styling within posts */
+.news-post img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+/* Video styling within posts */
+.news-post video {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+/* Like section styling */
+.like-section {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.like-count {
+    font-size: 14px;
+    color: #777;
+    margin-left: 10px;
+}
+
+/* Post header styles */
+.post-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.post-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;  /* Add space between name and time */
+}
+
+/* Ensuring post user image is smaller and takes priority */
+.news-post .post-header .post-user-info .post-user-image {
+    width: 50px !important;      /* Set a smaller width */
+    height: 50px !important;     /* Set a smaller height */
+    border-radius: 50% !important;  /* Keep it circular */
+    object-fit: cover !important;   /* Ensure the image doesn't get distorted */
+}
+
+.post-user-name strong {
+    font-size: 16px;
+}
+
+/* Styling for post time */
+.news-post .post-header .post-time {
+    font-size: 14px !important;
+    color: #777 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+}
+
+.post-time i {
+    color: var(--primary-color);
+}
+
+.news-post .post-header .post-time i {
+    color: var(--primary-color) !important;
+}
+
+.btn {
+    margin-top: 30px;
+}
+
+/* Responsive layout for small screens */
+@media (max-width: 768px) {
+    .news-container {
+        padding: 15px;
+    }
+
+    .news-post {
+        padding: 15px;
+    }
+
+    .news-post h3 {
+        font-size: 18px;
+    }
+
+    .news-post p {
+        font-size: 14px;
+    }
+
+    .post-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+
+/* General styles for the comment section */
+.comments-section {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.comment-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+    background-color: #f1f1f1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* User info and profile picture */
+.comment-user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-user-image-container {
+    margin-right: 10px;
+}
+
+.comment-user-image {
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+.comment-user {
+    font-weight: bold;
+    color: #000000;  /* Set username color to black */
+    font-size: 16px;  /* Adjusted font size for better visibility */
+    font-family: "Arial", sans-serif;  /* Non-slanted, clean font */
+}
+
+/* Comment content and time */
+.comment-content {
+    flex-grow: 1;
+    font-size: 16px;  /* Increased font size for readability */
+    color: #000000;  /* Set comment text color to black */
+    font-family: "Arial", sans-serif;  /* Consistent font family */
+    line-height: 1.5;  /* Increased line height for better spacing */
+}
+
+.comment-time {
+    font-size: 0.85rem;
+    color: #333;  /* Change time color to dark gray for contrast */
+    margin-top: 5px;
+    font-family: "Arial", sans-serif;  /* Non-slanted font */
+}
+
+.comment-time:hover {
+    color: #007bff;
+    cursor: pointer;
+}
+
+/* Comments list */
+.comments-list {
+    margin-top: 15px;
+}
+
+.comment-item:nth-child(odd) {
+    background-color: #f1f1f1;
+}
+
+.comment-item:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Heading for comments section */
+.comments-section h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    font-family: "Arial", sans-serif;  /* Consistent font */
+}
+
+/* No comments message */
+.comments-section p {
+    font-size: 1rem;
+    color: #999;
+    font-style: normal;  /* Make sure no slanted font */
+    font-family: "Arial", sans-serif;  /* Consistent font */
+}
+
+/* Responsive design for small screens */
+@media (max-width: 768px) {
+    .comment-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+    }
+
+    .comment-user-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .comment-user-image {
+        margin-bottom: 10px;
+    }
+
+    .comment-content {
+        font-size: 14px;
+    }
+
+    .comment-time {
+        font-size: 0.8rem;
+    }
+}
+
+
+ /* Styling for the Show/Hide Comments button */
+.toggle-comments-btn {
+    background-color: #007bff;  /* Blue background */
+    color: white;               /* White text */
+    border: none;               /* No border */
+    padding: 8px 16px;          /* Padding for the button */
+    font-size: 14px;            /* Font size */
+    border-radius: 4px;         /* Rounded corners */
+    cursor: pointer;           /* Pointer cursor on hover */
+    margin-bottom: 15px;        /* Space between button and comments */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Change button color on hover */
+.toggle-comments-btn:hover {
+    background-color: #0056b3;  /* Darker blue when hovered */
+}
+
+/* Styling when comments are shown */
+.toggle-comments-btn.active {
+    background-color: #28a745; /* Green background when active (comments visible) */
+}
+
+
