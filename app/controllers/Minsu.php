@@ -97,8 +97,49 @@ class Minsu extends Controller {
 
     //View Admin Dashboard
     public function admin_dashboard() {
-        $this->call->view('admin/dashboard');
+        // Get the database connection
+        $this->call->database();
+        
+        // Query to get the number of users logged in today
+        $today_query = "SELECT COUNT(*) AS count FROM user WHERE DATE(created_at) = CURDATE()";
+        $today_result = $this->db->raw($today_query)->fetch(PDO::FETCH_ASSOC);  // Fetch the result as an associative array
+        $today_login_count = isset($today_result['count']) ? $today_result['count'] : 0;
+        
+        // Query to get the number of users logged in each day for the past 7 days
+        $query = "SELECT DATE(created_at) AS date, COUNT(*) AS count 
+                  FROM user 
+                  WHERE created_at >= CURDATE() - INTERVAL 7 DAY 
+                  GROUP BY DATE(created_at) 
+                  ORDER BY DATE(created_at) DESC";
+        
+        $result = $this->db->raw($query)->fetchAll(PDO::FETCH_ASSOC);  // Fetch all results as an associative array
+        
+        // Prepare data for chart
+        $dates = [];
+        $logins = [];
+        
+        foreach ($result as $row) {
+            $dates[] = $row['date'];
+            $logins[] = $row['count'];
+        }
+        
+        // Query to get the total number of users
+        $total_users_query = "SELECT COUNT(*) AS count FROM user";
+        $total_users_result = $this->db->raw($total_users_query)->fetch(PDO::FETCH_ASSOC);  // Fetch the result as an associative array
+        $total_users = isset($total_users_result['count']) ? $total_users_result['count'] : 0;
+        
+        // Pass data to the view
+        $this->call->view('admin/dashboard', [
+            'dates' => $dates,
+            'logins' => $logins,
+            'today_login_count' => $today_login_count,
+            'total_users' => $total_users
+        ]);
     }
+    
+    
+    
+    
 
     //Contact page
     public function contact() {
@@ -109,9 +150,10 @@ class Minsu extends Controller {
     public function news() {
         // Fetch all news posts from the model
         $data['news_posts'] = $this->minsu_model->get_all_news_sorted();
-    
-        // If news posts are available, process them to include like counts and comments
+        
+        // Check if there are any news posts
         if (is_array($data['news_posts']) && !empty($data['news_posts'])) {
+            // Loop through the news posts and fetch additional data
             foreach ($data['news_posts'] as &$post) {
                 // Add the like count for each news post
                 $post['like_count'] = $this->minsu_model->get_likes_count($post['id']);
@@ -122,15 +164,38 @@ class Minsu extends Controller {
     
             // Merge additional data (like time_ago function) if needed
             $data['time_ago'] = array($this, 'time_ago');
-    
-            // Call the view to display the news posts along with the comments
-            $this->call->view('admin/news', $data);
         } else {
-            echo "Error: No valid news data found.";
+            // If no posts, set a flag or message for the view to handle
+            $data['news_posts'] = [];
+            $data['no_news_message'] = 'No news posts available.';
         }
+    
+        // Call the view to display the news posts along with the comments
+        $this->call->view('admin/news', $data);
     }
     
     
+    // In controllers/Minsu.php
+
+public function delete_news($news_id) {
+    // Call the model's delete_news method
+    $this->call->model('Minsu_model');
+    $result = $this->Minsu_model->delete_news($news_id);
+
+    // Redirect back to the admin news page after deletion
+    if ($result) {
+        // Optionally, you can add some success message in a different way (e.g., in a flash variable or a database message)
+        echo 'News post deleted successfully.';
+        header("Location: /admin/news");
+        exit();
+    } else {
+        // If deletion fails, display an error message
+        echo 'Failed to delete news post.';
+        header("Location: /admin/news");
+        exit();
+    }
+}
+
 
     public function view_news($id) {
         $data['news_post'] = $this->minsu_model->get_news_by_id($id);
@@ -145,7 +210,7 @@ class Minsu extends Controller {
     public function submitNews() {
         if ($this->form_validation->submitted()) {
             $title = $this->io->post('title');
-            $category = $this->io->post('category');
+            
             $caption = $this->io->post('caption');
     
             // Image upload logic
@@ -212,7 +277,6 @@ class Minsu extends Controller {
             // Prepare the data to be inserted into the database
             $newsData = [
                 'title' => $title,
-                'category' => $category,
                 'caption' => $caption,
                 'created_at' => date('Y-m-d H:i:s'),
             ];
@@ -436,24 +500,61 @@ public function add_comment() {
     public function post_page() {
         $this->call->model('Minsu_model');
         $posts = $this->Minsu_model->get_all_posts();
+        
+        // Check if $posts is an array before using foreach
+        if (is_array($posts)) {
+            // Add the like count, check if the user liked each post, and get comments
+            foreach ($posts as &$post) {
+                $post['like_count'] = $this->Minsu_model->get_post_likes_count($post['id']);
+                $post['user_liked'] = $this->Minsu_model->has_user_liked_post($post['id'], $_SESSION['user_id']);
+                // Get comments for each post
+                $post['comments'] = $this->Minsu_model->get_post_comments($post['id']);
+                
+                // Debugging: Check the comments data
+                if (!$post['comments']) {
+                    echo "";
+                }
+            }
     
-        // Add the like count and check if the user liked each post
-        foreach ($posts as &$post) {
-            $post['like_count'] = $this->Minsu_model->get_post_likes_count($post['id']);
-            $post['user_liked'] = $this->Minsu_model->has_user_liked_post($post['id'], $_SESSION['user_id']);
-        }
-    
-        if ($posts) {
-            $this->data['news_posts'] = $posts;
+            $this->data['news_posts'] = $posts;  // Assign posts if there are any
         } else {
+            // If no posts, set news_posts to an empty array
             $this->data['news_posts'] = [];
         }
+    
         $this->data['time_ago'] = array($this, 'time_ago');
         $this->call->view('minsu/post_page', $this->data);
     }
     
-    // Method to handle the toggling of post like (like/unlike)
-    public function toggle_post_like() {
+    
+    
+    
+    public function post_comment() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Sanitize and validate the comment
+            $comment = trim($_POST['comment']);
+            $post_id = intval($_POST['post_id']);
+            $user_id = $_SESSION['user_id'];
+    
+            // Validate that the comment is not empty
+            if (!empty($comment)) {
+                $this->call->model('Minsu_model');
+                $this->Minsu_model->add_post_comment($post_id, $user_id, $comment);
+    
+                // Redirect back to the post page
+                header("Location: /post?id=" . $post_id);
+                exit();
+            } else {
+                // Handle the case where comment is empty
+                $_SESSION['error'] = 'Comment cannot be empty!';
+                header("Location: /post?id=" . $post_id);
+                exit();
+            }
+        }
+    }
+
+     // Method to handle the toggling of post like (like/unlike)
+     public function toggle_post_like() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $post_id = $_POST['post_id'];
             $user_id = $_POST['user_id'];
@@ -487,6 +588,7 @@ public function add_comment() {
             ]);
         }
     }
+    
     
 
     //View User Post 
@@ -565,21 +667,26 @@ public function add_comment() {
     }
 
     // Gallery Page
-public function gallery() {
-    // This could fetch the gallery images or any data related to the gallery from the database.
-    // For now, I'll assume you have the gallery images stored in the 'public/images' folder.
+    public function gallery() {
+        // Load the database connection
+        $this->call->database();
     
-    // Example of image data (replace with actual database queries or static data if necessary)
-    $this->data['gallery_images'] = [
-        ['title' => 'Image 1', 'image_path' => 'images/msu1.jpg'],
-        ['title' => 'Image 2', 'image_path' => 'images/msu2.jpg'],
-        ['title' => 'Image 3', 'image_path' => 'images/msu3.jpg'],
-        ['title' => 'Image 4', 'image_path' => 'images/msu4.jpg']
-    ];
+        // Query the 'news' table to get both 'image' and 'title'
+        $gallery_images = $this->db->table('news')->select('image')->get_all();
     
-    // Load the gallery view and pass the gallery data
-    $this->call->view('Minsu/gallery', $this->data);
-}
+        // Filter out records where 'image' is empty or null
+        $filtered_images = array_filter($gallery_images, function($image) {
+            return !empty($image['image']);
+        });
+    
+        // Prepare data to pass to the view
+        $this->data['gallery_images'] = $filtered_images;
+    
+        // Load the gallery view and pass the gallery data
+        $this->call->view('Minsu/gallery', $this->data);
+    }
+    
+    
 
 public function accounts() {
     // Fetch all user accounts from the model

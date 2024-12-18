@@ -102,6 +102,25 @@ class Minsu_model extends Model {
     public function insert_news($newsData) {
         return $this->db->table('news')->insert($newsData);
     }
+
+    // In models/Minsu_model.php
+    public function delete_news($news_id) {
+        // Initialize the database connection
+        $this->call->database();
+    
+        // Attempt to delete the news record from the 'news' table
+        $this->db->table('news')->where('id', $news_id)->delete();
+    
+        // Check if the delete operation was successful
+        if ($this->db->row_count() > 0) {
+            return true; // Record was deleted
+        } else {
+            return false; // No record was deleted
+        }
+    }
+    
+    
+
     public function add_comment($news_id, $user_id, $comment) {
         $data = [
             'news_id' => $news_id,
@@ -168,6 +187,30 @@ class Minsu_model extends Model {
     
         return $posts ? $posts : false; 
     }
+
+    // Get all comments for a specific post
+    public function get_post_comments($post_id) {
+        $result = $this->db->table('post_comment')
+                           ->join('user', 'post_comment.user_id = user.id')
+                           ->select('post_comment.*, user.username, user.profile_pic')
+                           ->where('post_comment.post_id', $post_id)
+                           ->order_by('post_comment.created_at', 'DESC')
+                           ->get_all();
+        return $result;
+    }
+    
+
+// Add a comment to a post
+public function add_post_comment($post_id, $user_id, $comment) {
+    $data = [
+        'post_id' => $post_id,
+        'user_id' => $user_id,
+        'comment' => $comment
+    ];
+    
+    return $this->db->table('post_comment')->insert($data);
+}
+
     
     //delete post model
     public function deletePost($postId) {

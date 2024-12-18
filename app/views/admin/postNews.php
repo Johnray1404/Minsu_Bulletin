@@ -58,16 +58,6 @@
         <input type="file" id="video" name="video" accept="video/*">
     </div>
 
-    <div class="form-group">
-        <label for="category">Category</label>
-        <select id="category" name="category" required>
-            <option value="" disabled selected>Select category</option>
-            <option value="academic">Academic</option>
-            <option value="sports">Sports</option>
-            <option value="events">Events</option>
-        </select>
-    </div>
-
     <button type="submit" class="btn btn-primary">Post News</button>
 </form>
 </div>
